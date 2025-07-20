@@ -1,0 +1,50 @@
+auth:
+  enabled: true
+  # Usuario de aplicación (puede publicar/suscribirse pero no admin)
+  user: drkapps
+  password: 123456789
+
+nats:
+  image: nats:2.10.8-alpine
+  port: 4222
+  jetstream:
+    enabled: true
+  logging:
+    debug: true
+
+# Configuración de cuentas
+config:
+  nats.conf: |
+    # Habilitar JetStream
+    jetstream {
+      store_dir: /data/jetstream
+    }
+
+    # Definir cuentas y usuarios
+    accounts: {
+      SYS: {
+        users: [
+          { user: "sysadmin", password: "sys123" }
+        ]
+      }
+      APP: {
+        users: [
+          { user: "drkapps", password: "Ximesamy2020." }
+        ]
+      }
+    }
+
+    # Usar la cuenta SYS como cuenta de sistema
+    system_account: SYS
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+service:
+  type: ClusterIP
+  port: 4222

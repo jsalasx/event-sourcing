@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-cmd
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: account-cmd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-cmd
+  template:
+    metadata:
+      name: account-cmd
+      labels:
+        app: account-cmd
+    spec:
+      containers:
+        - name: account-cmd
+          image: kfcregistry.azurecr.io/bank/account-cmd:{{ .Values.tag_deployment}}
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: account-cmd-env
+      restartPolicy: Always

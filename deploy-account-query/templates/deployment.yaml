@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-query
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: account-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-query
+  template:
+    metadata:
+      name: account-query
+      labels:
+        app: account-query
+    spec:
+      containers:
+        - name: account-query
+          image: kfcregistry.azurecr.io/bank/account-query:{{ .Values.tag_deployment }}
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: account-query-env
+      restartPolicy: Always
